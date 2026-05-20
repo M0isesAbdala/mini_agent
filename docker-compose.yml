@@ -1,0 +1,42 @@
+services:
+  nbody:
+      image: nvcr.io/nvidia/k8s/cuda-sample:nbody
+      command: ["nbody", "-gpu", "-benchmark"]
+      deploy:
+        resources:
+          reservations:
+            devices:
+              - capabilities: [gpu]
+      stdin_open: true
+      tty: true
+  ollama:
+    image: ollama/ollama
+    container_name: ollama-agent
+    depends_on:
+      - nbody
+    ports:
+      - "11434:11434"
+    runtime: nvidia
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    restart: unless-stopped
+  app:
+    build: ./bun_agent
+    container_name: bun-agent
+    depends_on:
+      - ollama
+      - nbody
+    environment:
+      - OLLAMA_HOST=http://ollama-agent:11434
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+volumes:
+  ollama_data:

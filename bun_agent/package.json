@@ -1,0 +1,17 @@
+{
+  "name": "bun_agent",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "^1.3.12"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "private": true,
+  "scripts": {
+    "start": "bun run ./src/index.ts",
+    "dev": "OLLAMA_HOST=http://localhost:11434 bun run ./src/index.ts",
+    "build": "bun build ./src/index.ts --outdir ./target --target bun --minify-whitespace --minify-identifiers --minify-syntax"
+  },
+  "type": "module"
+}

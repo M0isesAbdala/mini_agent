@@ -1,4 +1,3 @@
-# ---------- build ----------
 FROM oven/bun:1 AS builder
 
 WORKDIR /app
@@ -16,7 +15,6 @@ RUN bun build ./src/index.ts \
   --minify-syntax
 
 
-# ---------- runtime ----------
 FROM oven/bun:1
 
 WORKDIR /app
